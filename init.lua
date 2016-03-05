@@ -1,5 +1,20 @@
 -- Parameters
 
+-- These are given to a player who spawns in a shell
+-- To give each player items in their inventory, try the 'give_initial_stuff' mod
+local GIVE_INITIAL_STUFF = { "moonrealm:spacesuit 4", "moonrealm:sapling 4",
+				"moonrealm:airlock 4", "moonrealm:airgen 4",
+				"moonrealm:hlsource 4", "default:apple 64",
+				"default:pick_diamond 4", "default:axe_diamond 4",
+				"default:shovel_diamond 4"
+			}
+-- Set to true to make moonrealm:soil actually default:dirt. This means default:dirt
+-- will dry into moonrealm:dust if no moonrealm:hlsource is nearby
+      SOIL_IS_DIRT = false
+-- Allow each player to spawn in their own shell. If false, normal spawn applies.
+-- Try setting to false for public servers
+local SPAWN_WITH_SHELL = true
+
 local YMIN = -8000 -- Approx lower limit
 local GRADCEN = 1 -- Gradient centre / terrain centre average level
 local YMAX = 8000 -- Approx upper limit
@@ -484,6 +499,11 @@ function moonrealm_spawnplayer(player)
 	print ("[moonrealm] spawn player ("..xsp.." "..ysp.." "..zsp..")")
 	player:setpos({x = xsp, y = ysp, z = zsp})
 
+	for i,v in ipairs(GIVE_INITIAL_STUFF) do
+		minetest.add_item({x = xsp, y = ysp + 1, z = zsp}, v)
+        end
+
+--[[
 	minetest.add_item({x = xsp, y = ysp + 1, z = zsp}, "moonrealm:spacesuit 4")
 	minetest.add_item({x = xsp, y = ysp + 1, z = zsp}, "moonrealm:sapling 4")
 	minetest.add_item({x = xsp, y = ysp + 1, z = zsp}, "moonrealm:airlock 4")
@@ -493,7 +513,7 @@ function moonrealm_spawnplayer(player)
 	minetest.add_item({x = xsp, y = ysp + 1, z = zsp}, "default:pick_diamond 4")
 	minetest.add_item({x = xsp, y = ysp + 1, z = zsp}, "default:axe_diamond 4")
 	minetest.add_item({x = xsp, y = ysp + 1, z = zsp}, "default:shovel_diamond 4")
-
+]]
 	local vm = minetest.get_voxel_manip()
 	local pos1 = {x = xsp - 3, y = ysp - 3, z = zsp - 3}
 	local pos2 = {x = xsp + 3, y = ysp + 6, z = zsp + 3}
@@ -533,11 +553,15 @@ end
 
 
 minetest.register_on_newplayer(function(player)
-	moonrealm_spawnplayer(player)
+	if SPAWN_WITH_SHELL then
+		moonrealm_spawnplayer(player)
+	end
 end)
 
 minetest.register_on_respawnplayer(function(player)
-	moonrealm_spawnplayer(player)
+	if SPAWN_WITH_SHELL then
+		moonrealm_spawnplayer(player)
+	end
 	return true
 end)
 

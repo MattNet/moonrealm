@@ -1,3 +1,11 @@
+local SOIL = "moonrealm:soil" -- Used to grow moonrealm:appletree and to be saturated by moonrealm:hlsource
+local DRYSOIL = {"moonrealm:soil"} -- This is dried into moonrealm:dust when there is no moonrealm:hlsource nearby
+
+if SOIL_IS_DIRT then
+	SOIL = "default:dirt"
+	DRYSOIL = { "group:soil" }
+end
+
 -- Space apple tree
 
 function moonrealm_appletree(pos)
@@ -8,7 +16,7 @@ function moonrealm_appletree(pos)
 	local c_tree = minetest.get_content_id("default:tree")
 	local c_apple = minetest.get_content_id("default:apple")
 	local c_appleleaf = minetest.get_content_id("moonrealm:appleleaf")
-	local c_soil = minetest.get_content_id("moonrealm:soil")
+	local c_soil = minetest.get_content_id(SOIL)
 	local c_lsair = minetest.get_content_id("moonrealm:air")
 
 	local vm = minetest.get_voxel_manip()
@@ -190,8 +198,7 @@ minetest.register_abm({
 		local c_dust = minetest.get_content_id("moonrealm:dust")
 		local c_dustp1 = minetest.get_content_id("moonrealm:dustprint1")
 		local c_dustp2 = minetest.get_content_id("moonrealm:dustprint2")
-		local c_soil = minetest.get_content_id("moonrealm:soil")
-	
+		local c_soil = minetest.get_content_id(SOIL)
 		local vm = minetest.get_voxel_manip()
 		local pos1 = {x=x-2, y=y-4, z=z-2}
 		local pos2 = {x=x+2, y=y, z=z+2}
@@ -227,7 +234,7 @@ minetest.register_abm({
 -- Soil drying ABM
 
 minetest.register_abm({
-	nodenames = {"moonrealm:soil"},
+	nodenames = DRYSOIL,
 	interval = 31,
 	chance = 9,
 	action = function(pos, node)

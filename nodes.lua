@@ -201,14 +201,16 @@ minetest.register_node("moonrealm:hlsource", {
 	groups = {water=3, liquid=3, puts_out_fire=1},
 })
 
-minetest.register_node("moonrealm:soil", {
-	description = "Moonsoil",
-	tiles = {"moonrealm_soil.png"},
-	is_ground_content = false,
-	groups = {crumbly=3},
-	drop = "moonrealm:dust",
-	sounds = default.node_sound_dirt_defaults(),
-})
+if SOIL_IS_DIRT ~= true then 
+	minetest.register_node("moonrealm:soil", {
+		description = "Moonsoil",
+		tiles = {"moonrealm_soil.png"},
+		is_ground_content = false,
+		groups = {crumbly=3},
+		drop = "moonrealm:dust",
+		sounds = default.node_sound_dirt_defaults(),
+	})
+end
 
 minetest.register_node("moonrealm:airlock", {
 	description = "Airlock",
